@@ -1,5 +1,5 @@
 {
-  "name": "babel-parser",
+  "name": "zh-cn-i18n-converter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,8 @@
     "js": "cd javascript && ts-node index.ts",
     "html": "cd html && ts-node index.ts"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "https://github.com/unitwk",
+  "license": "MIT",
   "dependencies": {
     "@babel/generator": "^7.19.0",
     "@babel/parser": "^7.19.1",
