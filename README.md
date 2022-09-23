@@ -18,7 +18,8 @@
 使用方式
 -----
 ```bash
-npm run <语言文件路径.json> <要转换的vue文件或目录>
+npm install
+npm start <语言文件路径.json> <要转换的vue文件或目录>
 ```
 
 <br />
