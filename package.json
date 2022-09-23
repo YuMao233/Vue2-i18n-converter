@@ -1,0 +1,37 @@
+{
+  "name": "babel-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "js": "cd javascript && ts-node index.ts",
+    "html": "cd html && ts-node index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/generator": "^7.19.0",
+    "@babel/parser": "^7.19.1",
+    "@babel/traverse": "^7.19.1",
+    "@types/fs-extra": "^9.0.13",
+    "cheerio": "^1.0.0-rc.12",
+    "dom-serializer": "^2.0.0",
+    "fs-extra": "^10.1.0",
+    "htmlparser2": "^8.0.1",
+    "jquery": "^3.6.1",
+    "jsdom": "^20.0.0",
+    "lodash": "^4.17.21",
+    "node-html-parser": "^6.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.19.0",
+    "@types/babel__generator": "^7.6.4",
+    "@types/babel__traverse": "^7.18.1",
+    "@types/jquery": "^3.5.14",
+    "@types/lodash": "^4.14.185",
+    "@types/node": "^18.7.18"
+  }
+}
