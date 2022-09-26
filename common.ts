@@ -75,15 +75,19 @@ export function getObjectAttr(root: ObjectMap, attrPath: string[]): JsonMap | nu
 
 export function includeCommonLang(commonLang: JsonMap, text: string) {
   const prefix = 'CommonText'
-  let i = 1
+  // 重复内容直接返回
   for (const key in commonLang) {
     const cText = commonLang[key]
-    i++
-    if (cText === text) {
-      return `${prefix}.${key}`
-    }
+    if (cText === text) return `${prefix}.${key}`
   }
-  const fullNumber = fillNumber(i)
+  // 获取最大序号
+  const maxId = findMax$tNumberByLangFile(
+    {
+      [prefix]: commonLang,
+    },
+    prefix,
+  )
+  const fullNumber = fillNumber(maxId + 1)
   commonLang[fullNumber] = text
   return `${prefix}.${fullNumber}`
 }
