@@ -73,6 +73,7 @@ export function getObjectAttr(root: ObjectMap, attrPath: string[]): JsonMap | nu
   return current
 }
 
+// 公共文本处理
 export function includeCommonLang(commonLang: JsonMap, text: string) {
   const prefix = 'CommonText'
   // 重复内容直接返回
