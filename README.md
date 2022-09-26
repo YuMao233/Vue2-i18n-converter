@@ -19,7 +19,24 @@
 -----
 ```bash
 npm install
-npm start <语言文件路径.json> <要转换的vue文件或目录>
+npm start exec <语言文件路径.json> <要转换的vue文件或目录>
+```
+
+列如：
+
+```
+unitwk@unitwk-Macbook-Pro zh-cn-i18n-converter % npm start exec /Users/unitwk/Documents/App/src/lib/i18n/zh_CN.json /Users/unitwk/Documents/App/src/view/OrderCenter/Test.vue
+
+语言文件： "/Users/wangkun/Documents/SupportProject/weplay-admin-huafu-project/src/lib/i18n/zh_CN.json"
+目标目录/文件： "/Users/wangkun/Documents/SupportProject/weplay-admin-huafu-project/src/view/OrderCenter/Test.vue"
+
+----------
+正在处理 Vue 文件: /Test.vue | 开始序号： 19
+语言文件前缀： OrderCenter.Test
+HTML 文本转换: 已添加 -> {{ $t('CommonText.664') }}
+HTML 文本转换: 已取消 -> {{ $t('CommonText.602') }}
+HTML 表达式转换: 操作人：{{ scope.row.cancel_operator }} 时间：{{ formatTime(scope.row.cancel_time_sec) }} -> {{ $t('OrderCenter.Test.019', [ scope.row.cancel_operator , formatTime(scope.row.cancel_time_sec) ]) }}
+
 ```
 
 <br />
