@@ -27,8 +27,8 @@ npm start exec <语言文件路径.json> <要转换的vue文件或目录>
 ```
 unitwk@unitwk-Macbook-Pro zh-cn-i18n-converter % npm start exec /Users/unitwk/Documents/App/src/lib/i18n/zh_CN.json /Users/unitwk/Documents/App/src/view/OrderCenter/Test.vue
 
-语言文件： "/Users/wangkun/Documents/SupportProject/weplay-admin-huafu-project/src/lib/i18n/zh_CN.json"
-目标目录/文件： "/Users/wangkun/Documents/SupportProject/weplay-admin-huafu-project/src/view/OrderCenter/Test.vue"
+语言文件： "/Users/unitwk/Documents/App/src/lib/i18n/zh_CN.json"
+目标目录/文件： "/Users/unitwk/Documents/App/src/view/OrderCenter/Test.vue"
 
 ----------
 正在处理 Vue 文件: /Test.vue | 开始序号： 19
