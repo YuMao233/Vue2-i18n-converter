@@ -47,6 +47,37 @@ HTML 表达式转换: 操作人：{{ scope.row.cancel_operator }} 时间：{{ fo
 
 <br />
 
+
+注意事项
+-----
+转换后务必检查代码差异！字符串文本中包含至少一个中文汉字才会触发转换规则
+
+**脚本无法处理的代码**
+
+为避免因为脚本转换出现问题，以下几种情况代码不会被转换成国际化格式：
+
+```html
+<span>实名认证：{{real_name_info.id_num ? 1 : 2 }}认证</span>   <!-- Vue表达式内不含中文，可以 -->
+<span>实名认证：{{ real_name_info.id_num ? '已' : '未' }}认证</span>    <!-- Vue表达式内含中文，不可以 -->
+```
+
+```javascript
+const tmp1 = "你好" + name    // 文本常量，可以
+const tmp2 = `你好，${name}`  // 模板文本，不可以
+```
+
+```javascript
+//  所有 JSX 语法均无法解析
+  return (
+    <div>
+      <el-button onClick={() => this.lookNest(row)} type="primary" size="small">
+        你好世界
+      </el-button>
+    </div>
+  )
+```
+
+
 开源协议
 -----
 MIT license
