@@ -11,7 +11,7 @@ const targetFileList: string[] = []
 function main(targetDir: string, langPath: string) {
   // 语言包
   let topLanguageJson = JSON.parse(fs.readFileSync(langPath, 'utf-8'))
-  const commonLang = topLanguageJson.CommonText
+  const commonLang = topLanguageJson.CommonText || {}
 
   // Vue 专属解析器
   function parseVueFile(code: string) {

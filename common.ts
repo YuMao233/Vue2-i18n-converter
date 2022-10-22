@@ -1,3 +1,4 @@
+import { platform } from 'os'
 import path from 'path'
 
 export function hasChinese(str = '') {
@@ -171,11 +172,13 @@ export function findMax$tNumberByLangFile(language: ObjectMap, prefix: string) {
 export function buildLangPrefix(targetPath: string) {
   let prefix1 = ''
   let prefix2 = ''
-  const prefix3 = targetPath.split('/').slice(-2)
+  const LR = platform() === 'win32' ? '\\' : '/'
+  const prefix3 = targetPath.split(LR).slice(-2)
 
   let tmpFlag = false
-  for (const iterator of targetPath.split('/')) {
+  for (const iterator of targetPath.split(LR)) {
     if (iterator === 'view') continue
+    if (iterator === 'app') continue
     if (iterator === 'src') {
       tmpFlag = true
       continue
