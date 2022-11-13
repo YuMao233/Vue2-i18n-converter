@@ -8,6 +8,7 @@ import _ from 'lodash'
 const targetFileList: string[] = []
 
 // 主方法
+
 function main(targetDir: string, langPath: string) {
   // 语言包
   let topLanguageJson = JSON.parse(fs.readFileSync(langPath, 'utf-8'))
