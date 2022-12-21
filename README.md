@@ -22,6 +22,13 @@ npm install
 npm start exec <语言文件路径.json> <要转换的vue文件或目录>
 ```
 
+> 语言文件.json 如果是空的，则里面必须预先写入如下数据：
+```
+{
+  "CommonText":{}
+}
+```
+
 列如：
 
 ```
