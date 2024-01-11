@@ -17,7 +17,7 @@
 ```html
 <template>
   <span>
-    <i class="el-icon-document-copy copy-button" @click="copyStr(text)">点击复制</i>
+    <i @click="copyStr(text)">点击复制</i>
   </span>
 </template>
 
@@ -38,7 +38,7 @@ export default {
 <template>
   <span>
     <!-- 已多语言化 -->
-    <i class="el-icon-document-copy copy-button" @click="copyStr(text)">{{ $t('CommonText.001') }}</i>
+    <i @click="copyStr(text)">{{ $t('CommonText.001') }}</i>
   </span>
 </template>
 
