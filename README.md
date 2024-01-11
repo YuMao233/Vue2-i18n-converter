@@ -1,14 +1,14 @@
-中文 Vue 项目国际化转换工具
------
+## 中文 Vue 项目国际化转换工具
+
 基于抽象语法树实现的中文 Vue 项目转换为国际化项目脚本。
 
 它的工作原理是使用 Babel 的 Javascript 语法解析和第三方依赖库的 HTML DOM 数解析，所以这个工具在绝大部分场景下都不会破坏代码完整性，不会改变代码逻辑，但会改变代码格式（比如花括号自动换行）。
 
 <br />
 
-它可以做到什么？
------
-它可以实现  `Vue` 文件中的绝大部分的中文常量：`HTML` 中文文本（含 `Vue` 表达式），`Javascript` 字符串常量等全部转换成 `$t` 函数，并且将原中文编号放置到一个语言文件（`JSON`）中。
+## 它可以做到什么？
+
+它可以实现 `Vue` 文件中的绝大部分的中文常量：`HTML` 中文文本（含 `Vue` 表达式），`Javascript` 字符串常量等全部转换成 `$t` 函数，并且将原中文编号放置到一个语言文件（`JSON`）中。
 
 语言文件自动编号会自动合并重复文本，并且将短文本自动放置到公共层语言区域。
 
@@ -16,98 +16,126 @@
 
 ```html
 <template>
-  <span>
-    <i @click="copyStr(text)">点击复制</i>
-  </span>
+  <el-table :data="changeResult" border style="width: 100%">
+    <el-table-column prop="A" label="列1" width="110">
+      <span>这是测试文本: {{ name }}</span>
+    </el-table-column>
+    <el-table-column prop="B" label="列2" width="140"></el-table-column>
+    <el-table-column prop="C" label="列3" width="140"></el-table-column>
+    <el-table-column prop="D" label="列4" width="140"></el-table-column>
+  </el-table>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      user: "名字",
-    }
-  },
-}
+  export default {
+    data() {
+      return {
+        name: '你好世界 Hello',
+      }
+    },
+    methods: {
+      change() {
+        return '文件' + name
+      },
+    },
+  }
 </script>
+```
+
+**命令**
+
+```bash
+npm start exec ./zh_cn.json /Users/unitwk/my-project/hello.vue
+
 ```
 
 **转换成**
 
 ```html
 <template>
-  <span>
-    <!-- 已多语言化 -->
-    <i @click="copyStr(text)">{{ $t('CommonText.001') }}</i>
-  </span>
+  <el-table :data="changeResult" border style="width: 100%">
+    <el-table-column prop="A" width="110" :label="$t('T_101qe69')">
+      <span>{{ $t('T_1vj8uq3', [name]) }}</span>
+    </el-table-column>
+    <el-table-column prop="B" width="140" :label="$t('T_3ch8qbj')"></el-table-column>
+    <el-table-column prop="C" width="140" :label="$t('T_2n16mf5')"></el-table-column>
+    <el-table-column prop="D" width="140" :label="$t('T_o7fj26')"></el-table-column>
+  </el-table>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      user: window.$t("CommonText.002"), // 已多语言化
-    }
-  },
-}
+  export default {
+    data() {
+      return {
+        name: window.$t('T_3419iub'),
+      }
+    },
+    methods: {
+      change() {
+        return window.$t('T_3acu75o') + name
+      },
+    },
+  }
 </script>
 ```
 
-**输出 zh_cn.json **
+**输出 zh_cn.json**
 
 ```json
 {
-  "CommonText":{
-    "CommonText.001": "点击复制",
-    "CommonText.002": "名字"
-  }
+  "T_101qe69": "列1",
+  "T_1vj8uq3": "这是测试文本: {0}",
+  "T_3ch8qbj": "列2",
+  "T_2n16mf5": "列3",
+  "T_o7fj26": "列4",
+  "T_3419iub": "你好世界 Hello",
+  "T_3acu75o": "文件"
 }
 ```
 
+**支持增量更新，不会删除 json 语言包的内容**
+
 <br />
 
-使用方式
------
+## 使用方式
+
 ```bash
 npm install
 npm start exec <语言文件路径.json> <要转换的vue文件或目录>
 ```
 
-> 语言文件.json 如果是空的，则里面必须预先写入如下数据：
-```
-{
-  "CommonText":{}
-}
-```
+```javascript
+npm start exec ./b.json /Users/my-project/src/components/hello.vue
 
-列如：
+> zh-cn-i18n-converter@1.0.0 start
+> ts-node index.ts "exec" "./b.json" "/Users/my-project/src/components/hello.vue"
 
-```
-unitwk@unitwk-Macbook-Pro zh-cn-i18n-converter % npm start exec /Users/unitwk/Documents/App/src/lib/i18n/zh_CN.json /Users/unitwk/Documents/App/src/view/OrderCenter/Test.vue
-
-语言文件： "/Users/unitwk/Documents/App/src/lib/i18n/zh_CN.json"
-目标目录/文件： "/Users/unitwk/Documents/App/src/view/OrderCenter/Test.vue"
+语言文件： "/Users/wangkun/Documents/OtherWork/zh-cn-i18n-converter/b.json"
+目标目录/文件： "/Users/my-project/src/components/hello.vue"
 
 ----------
-正在处理 Vue 文件: /Test.vue | 开始序号： 19
-语言文件前缀： OrderCenter.Test
-HTML 文本转换: 已添加 -> {{ $t('CommonText.664') }}
-HTML 文本转换: 已取消 -> {{ $t('CommonText.602') }}
-HTML 表达式转换: 操作人：{{ scope.row.cancel_operator }} 时间：{{ formatTime(scope.row.cancel_time_sec) }} -> {{ $t('OrderCenter.Test.019', [ scope.row.cancel_operator , formatTime(scope.row.cancel_time_sec) ]) }}
+正在处理 Vue 文件: /hello.vue | 开始序号： 1
+
+HTML 属性转换: el-table-column label 列1 -> $t('T_101qe69')
+HTML 表达式转换: 这是测试文本: {{ name }} -> {{ $t('T_1vj8uq3', [ name ]) }}
+HTML 属性转换: el-table-column label 列2 -> $t('T_3ch8qbj')
+HTML 属性转换: el-table-column label 列3 -> $t('T_2n16mf5')
+HTML 属性转换: el-table-column label 列4 -> $t('T_o7fj26')
+JavaScript 常量替换: 你好世界 Hello -> $t("T_3419iub")  Parent: ObjectProperty
+JavaScript 常量替换: 文件 -> $t("T_3acu75o")  Parent: BinaryExpression
 
 ```
 
 <br />
 
-问题反馈
------
+## 问题反馈
+
 如果您在使用过程中遇到了一些问题，可以提交一个 PR 或 Issue 说明这个情况。
 
 <br />
 
+## 注意事项
 
-注意事项
------
 转换后务必检查代码差异！字符串文本中包含至少一个中文汉字才会触发转换规则
 
 **脚本无法处理的代码**
@@ -115,30 +143,30 @@ HTML 表达式转换: 操作人：{{ scope.row.cancel_operator }} 时间：{{ fo
 为避免因为脚本转换出现问题，以下几种情况代码不会被转换成国际化格式：
 
 ```html
-<span>实名认证：{{real_name_info.id_num ? 1 : 2 }}认证</span>   <!-- Vue表达式内不含中文，可以 -->
-<span>实名认证：{{ real_name_info.id_num ? '已' : '未' }}认证</span>    <!-- Vue表达式内含中文，不可以 -->
+<span>实名认证：{{real_name_info.id_num ? 1 : 2 }}认证</span>
+<!-- Vue表达式内不含中文，可以 -->
+<span>实名认证：{{ real_name_info.id_num ? '已' : '未' }}认证</span>
+<!-- Vue表达式内含中文，不可以 -->
 ```
 
 ```javascript
-const tmp1 = "你好" + name    // 文本常量，可以
-const tmp2 = `你好，${name}`  // 模板文本，不可以
+const tmp1 = '你好' + name // 文本常量，可以
+const tmp2 = `你好，${name}` // 模板文本，不可以
 ```
 
 ```javascript
 //  所有 JSX 语法均无法解析
-  return (
-    <div>
-      <el-button onClick={() => this.lookNest(row)} type="primary" size="small">
-        你好世界
-      </el-button>
-    </div>
-  )
+return (
+  <div>
+    <el-button onClick={() => this.lookNest(row)} type="primary" size="small">
+      你好世界
+    </el-button>
+  </div>
+)
 ```
 
+## 开源协议
 
-开源协议
------
 MIT license
 
 <br />
-

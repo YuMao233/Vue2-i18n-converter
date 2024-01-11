@@ -8,18 +8,16 @@ import _ from 'lodash'
 const targetFileList: string[] = []
 
 // 主方法
-
 function main(targetDir: string, langPath: string) {
   // 语言包
   let topLanguageJson = JSON.parse(fs.readFileSync(langPath, 'utf-8'))
-  if (!topLanguageJson.CommonText) topLanguageJson.CommonText = {}
-  const commonLang = topLanguageJson.CommonText
+  const commonLang = topLanguageJson
 
   // Vue 专属解析器
   function parseVueFile(code: string) {
     const tplStart = code.indexOf('<template>')
     const tplEnd = code.lastIndexOf('</template>') + 11
-    let template = code.slice(tplStart, tplEnd)
+    const template = code.slice(tplStart, tplEnd)
 
     const jsStart = code.indexOf('<script>')
     const jsEnd = code.lastIndexOf('</script>') + 9
@@ -34,8 +32,6 @@ function main(targetDir: string, langPath: string) {
       other: code,
     }
   }
-
-  let globalLangMap: JsonMap = {}
 
   // 根据目录和文件来生成不同的文件列表
   let files: string[] = []
@@ -67,12 +63,13 @@ function main(targetDir: string, langPath: string) {
     const startIndex = findMax$tNumberByLangFile(topLanguageJson, langPrefix) + 1
 
     let outputCode = ''
+    let tmpLangMap: JsonMap = {}
     // Vue File
     if (path.extname(filename) === '.vue') {
       const { script, template, other: otherCode } = parseVueFile(fileData)
       console.log('\n----------\n正在处理 Vue 文件:', filename, '| 开始序号：', startIndex)
       const { code, lang } = startGenerator(langPrefix, template, script, otherCode, 'vue', startIndex, commonLang)
-      globalLangMap = _.merge(globalLangMap, lang)
+      tmpLangMap = _.merge(tmpLangMap, lang)
       outputCode = code
     }
 
@@ -80,17 +77,16 @@ function main(targetDir: string, langPath: string) {
     if (path.extname(filename) === '.js') {
       console.log('\n----------\n正在处理 Javascript 文件:', filename, '| 开始序号：', startIndex)
       const { code, lang } = startGenerator(langPrefix, '', fileData, '', 'js', startIndex, commonLang)
-      globalLangMap = _.merge(globalLangMap, lang)
+      tmpLangMap = _.merge(tmpLangMap, lang)
       outputCode = code
     }
 
+    // 将语言文件的最终产物合并到现有语言文件
+    topLanguageJson = _.merge(topLanguageJson, tmpLangMap)
+    // 覆盖原文件
     if (outputCode) fs.writeFileSync(filePath, outputCode, 'utf-8')
+    fs.writeFileSync(languageFilePath, JSON.stringify(topLanguageJson, null, 2), 'utf-8')
   }
-
-  // 将语言文件的最终产物合并到现有语言文件
-  topLanguageJson = _.merge(topLanguageJson, globalLangMap)
-  // 覆盖原文件
-  fs.writeFileSync(languageFilePath, JSON.stringify(topLanguageJson, null, 2), 'utf-8')
 }
 
 // 针对单个文件的生成器
@@ -104,10 +100,9 @@ function startGenerator(filePrefix: string, html: string, javascript: string, ot
   const jsonLangMap: JsonMap = {}
   let mergeLangMap: JsonMap = {}
   mergeLangMap = _.merge(htmlLang, jsLang)
-
   // 按照语言文件前缀生成最终产物
   for (const key in mergeLangMap) {
-    setObjectAttr(jsonLangMap, filePrefix.split('.'), key, mergeLangMap[key])
+    jsonLangMap[key] = mergeLangMap[key]
   }
 
   // Vue文件代码模板
@@ -147,8 +142,18 @@ for (const i in process.argv) {
   }
 }
 
+if (!path.isAbsolute(languageFilePath.trim())) {
+  languageFilePath = path.normalize(path.join(process.cwd(), languageFilePath.trim()))
+}
+if (!path.isAbsolute(targetDir.trim())) {
+  targetDir = path.normalize(path.join(process.cwd(), targetDir.trim()))
+}
+
 if (targetDir && languageFilePath && path.isAbsolute(targetDir.trim()) && path.isAbsolute(languageFilePath.trim())) {
-  if (!fs.existsSync(targetDir) || !fs.existsSync(languageFilePath)) {
+  if (!fs.existsSync(languageFilePath)) {
+    fs.writeFileSync(languageFilePath, '{}', 'utf-8')
+  }
+  if (!fs.existsSync(targetDir)) {
     console.log('参数指定的文件不存在')
     process.exit(-1)
   }
@@ -161,3 +166,5 @@ if (targetDir && languageFilePath && path.isAbsolute(targetDir.trim()) && path.i
   console.log('参数错误！！！')
   process.exit(-1)
 }
+
+export { languageFilePath }

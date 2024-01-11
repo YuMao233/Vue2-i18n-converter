@@ -1,5 +1,26 @@
-import { platform } from 'os'
 import path from 'path'
+import { languageFilePath } from './index'
+import fs from 'fs-extra'
+import { platform } from 'os'
+import { crc32 } from 'crc'
+
+export interface ReturnValue {
+  index: number
+  output: string
+  lang: { [key: string]: any }
+}
+
+export interface JsonMap {
+  [key: string]: string
+}
+
+export interface ObjectMap {
+  [key: string]: any
+}
+
+export function getTextCodeId(t: string) {
+  return 'T_' + crc32(t).toString(32)
+}
 
 export function hasChinese(str = '') {
   if (str.includes('$t(')) return false
@@ -76,29 +97,21 @@ export function getObjectAttr(root: ObjectMap, attrPath: string[]): JsonMap | nu
 
 // 公共文本处理
 export function includeCommonLang(commonLang: JsonMap, text: string) {
-  const prefix = 'CommonText'
   // 重复内容直接返回
   for (const key in commonLang) {
-    const cText = commonLang[key]
-    if (cText === text) return `${prefix}.${key}`
+    if (commonLang[key] === text) return key
   }
-  // 获取最大序号
-  const maxId = findMax$tNumberByLangFile(
-    {
-      [prefix]: commonLang,
-    },
-    prefix,
-  )
-  const fullNumber = fillNumber(maxId + 1)
-  commonLang[fullNumber] = text
-  return `${prefix}.${fullNumber}`
+  // 生成随机ID
+  const mapKey = getTextCodeId(text)
+  return mapKey
 }
 
 export function isExistsTextForLang(prefix: string, map: JsonMap, text: string): string {
-  for (const key in map) {
-    const element = map[key]
+  const langJsonMap = JSON.parse(fs.readFileSync(languageFilePath, 'utf-8'))
+  for (const key in langJsonMap) {
+    const element = langJsonMap[key]
     if (element === text) {
-      return `${prefix}.${key}`
+      return key
     }
   }
   return ''
@@ -106,15 +119,12 @@ export function isExistsTextForLang(prefix: string, map: JsonMap, text: string):
 
 export function includeLangMap(filePrefix: string, index: number, text: string, commonLang: JsonMap, outputLanguageConfig: JsonMap) {
   let isBreak = false
-  let tFnKey = `${filePrefix}.${fillNumber(index)}`
-  if (text.length <= 4) {
-    tFnKey = includeCommonLang(commonLang, text)
-    isBreak = true
-  } else if (isExistsTextForLang(filePrefix, outputLanguageConfig, text) !== '') {
+  let tFnKey = getTextCodeId(text)
+  if (isExistsTextForLang(filePrefix, outputLanguageConfig, text)) {
     tFnKey = isExistsTextForLang(filePrefix, outputLanguageConfig, text)
     isBreak = true
   } else {
-    outputLanguageConfig[fillNumber(index)] = text
+    outputLanguageConfig[tFnKey] = text
   }
   return {
     tFnKey,
@@ -133,8 +143,8 @@ export function findMax$tNumber(code = '') {
       const commonTextP = line.indexOf('CommonText', start)
       const ep = line.indexOf(')', sp)
       if (sp > 0 && ep > 0 && (commonTextP == -1 || commonTextP > ep)) {
-        let keyExpress = line.slice(sp + 3, ep)
-        const keyExpressArr = keyExpress.replace(/\'/gim, '').split('')
+        const keyExpress = line.slice(sp + 3, ep)
+        const keyExpressArr = keyExpress.replace(/'/gim, '').split('')
         let n = ''
         let find = false
         for (const ch of keyExpressArr) {
@@ -194,18 +204,4 @@ export function buildLangPrefix(targetPath: string) {
   // 语言文件最终前缀
   let filePrefix = [prefix1, prefix2].join('.')
   return filePrefix
-}
-
-export interface ReturnValue {
-  index: number
-  output: string
-  lang: { [key: string]: any }
-}
-
-export interface JsonMap {
-  [key: string]: string
-}
-
-export interface ObjectMap {
-  [key: string]: any
 }

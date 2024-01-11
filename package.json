@@ -16,6 +16,7 @@
     "@babel/traverse": "^7.19.1",
     "@types/fs-extra": "^9.0.13",
     "cheerio": "^1.0.0-rc.12",
+    "crc": "^4.3.2",
     "dom-serializer": "^2.0.0",
     "fs-extra": "^10.1.0",
     "htmlparser2": "^8.0.1",
