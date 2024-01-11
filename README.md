@@ -102,6 +102,7 @@ npm start exec ./zh_cn.json /Users/unitwk/my-project/hello.vue
 ## 使用方式
 
 ```bash
+git clone https://github.com/unitwk/Vue2-i18n-converter.git
 npm install
 npm start exec <语言文件路径.json> <要转换的vue文件或目录>
 ```
