@@ -12,8 +12,57 @@
 
 语言文件自动编号会自动合并重复文本，并且将短文本自动放置到公共层语言区域。
 
-![https://public-link.oss-cn-shenzhen.aliyuncs.com/i18n-converter-main.jpg](https://public-link.oss-cn-shenzhen.aliyuncs.com/i18n-converter-main.jpg)
+**Vue2 源代码**
 
+```html
+<template>
+  <span>
+    <i class="el-icon-document-copy copy-button" @click="copyStr(text)">点击复制</i>
+  </span>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: "名字",
+    }
+  },
+}
+</script>
+```
+
+**转换成**
+
+```html
+<template>
+  <span>
+    <!-- 已多语言化 -->
+    <i class="el-icon-document-copy copy-button" @click="copyStr(text)">{{ $t('CommonText.001') }}</i>
+  </span>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: window.$t("CommonText.002"), // 已多语言化
+    }
+  },
+}
+</script>
+```
+
+**输出 zh_cn.json **
+
+```json
+{
+  "CommonText":{
+    "CommonText.001": "点击复制",
+    "CommonText.002": "名字"
+  }
+}
+```
 
 <br />
 
