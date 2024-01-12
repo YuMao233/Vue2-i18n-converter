@@ -99,6 +99,20 @@ npm start exec ./zh_cn.json /Users/unitwk/my-project/hello.vue
 
 <br />
 
+## 转换成随机码后会影响后续阅读代码吗？
+
+不会，你可以安装 VSCode 插件：
+
+![image](https://github.com/unitwk/Vue2-i18n-converter/assets/18360009/87ffd124-17f0-43b1-9443-60345de9f724)
+
+效果如下：
+![image](https://github.com/unitwk/Vue2-i18n-converter/assets/18360009/5bf01a22-209e-448c-8fbe-64e85b5af82a)
+
+
+
+<br />
+
+
 ## 使用方式
 
 ```bash
@@ -130,6 +144,8 @@ JavaScript 常量替换: 文件 -> $t("T_3acu75o")  Parent: BinaryExpression
 ```
 
 <br />
+
+
 
 ## 问题反馈
 
