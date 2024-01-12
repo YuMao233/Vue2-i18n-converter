@@ -106,6 +106,7 @@ npm start exec ./zh_cn.json /Users/unitwk/my-project/hello.vue
 ![image](https://github.com/unitwk/Vue2-i18n-converter/assets/18360009/87ffd124-17f0-43b1-9443-60345de9f724)
 
 效果如下：
+
 ![image](https://github.com/unitwk/Vue2-i18n-converter/assets/18360009/5bf01a22-209e-448c-8fbe-64e85b5af82a)
 
 
